@@ -2,8 +2,8 @@
 # Device Specific Config                   #
 # These can go under device BoardConfig.mk #
 # By PhilZ for PhilZ Touch recovery        #
-############################################
-#
+############################################0
+# add msm8960 changes for now in the xt926/5 section but in the future , unify here.
 # Info on some tags
 #   - KERNEL_EXFAT_MODULE_NAME: This will force minivold to use much faster kernel modules instead of slow fuse
 #                               it will only work if you have modified vold sources (contact me for info)
