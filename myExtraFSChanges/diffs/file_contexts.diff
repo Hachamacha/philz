@@ -1,0 +1,12 @@
+--- device/motorola/qcom-common/sepolicy/file_contexts.orig	2014-03-25 17:19:08.575969333 -0700
++++ device/motorola/qcom-common/sepolicy/file_contexts	2014-03-25 17:29:45.517323890 -0700
+@@ -87,6 +87,9 @@
+ /persist/WCNSS_qcom_wlan_nv_calibration_persist.bin u:object_r:persist_wifi_file:s0
+ /persist/WCNSS_qcom_wlan_nv_regulatory_persist.bin u:object_r:persist_wifi_file:s0
+ 
++# Persist firmware filesystem mounted as /extra_part1
++/extra_part1(/.*)?             u:object_r:system_file:s0
++
+ # PDS partition
+ /pds(/.*)?                     u:object_r:pds_file:s0
+ /pds/camera(/.*)?              u:object_r:camera_data_file:s0

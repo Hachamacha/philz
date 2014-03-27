@@ -1,0 +1,19 @@
+--- ./device/motorola/moto_msm8960/device_moto_msm8960.mk.orig	2014-03-23 16:15:51.030354266 -0700
++++ ./device/motorola/moto_msm8960/device_moto_msm8960.mk	2014-03-23 16:18:26.754493568 -0700
+@@ -111,14 +111,14 @@
+ PRODUCT_PACKAGES += \
+     AsantiKeypad
+ 
+-# Misc
++# Misc *mhs* try to allow backup/restore to /persist so lets try taking it from the list below (- /persist).
+ PRODUCT_PROPERTY_OVERRIDES += \
+     ro.usb.mtp=0x2e32 \
+     ro.usb.mtp_adb=0x2e33 \
+     ro.usb.ptp=0x2e30 \
+     ro.usb.ptp_adb=0x2e31 \
+     ro.hdmi.enable=true \
+-    ro.cwm.forbid_format="/fsg,/firmware,/persist,/modem,/boot"
++    ro.cwm.forbid_format="/fsg,/firmware,/modem,/boot"
+ 
+ # Opengles version 2
+ PRODUCT_PROPERTY_OVERRIDES += \

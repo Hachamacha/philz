@@ -1,0 +1,18 @@
+--- ./device/motorola/moto_msm8960/rootdir/etc/fstab.qcom.orig	2014-03-24 17:49:53.318126410 -0700
++++ ./device/motorola/moto_msm8960/rootdir/etc/fstab.qcom	2014-03-26 05:34:08.298866222 -0700
+@@ -1,13 +1,13 @@
+ # Android fstab file.
+ # The filesystem that contains the filesystem checker binary (typically /system) cannot
+-# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
++# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK - *mhs* mod for /persist.
+ #<src>                                              <mnt_point>      <type>  <mnt_flags and options>                                                              <fs_mgr_flags>
+ 
+ /dev/block/platform/msm_sdcc.1/by-name/system       /system          ext4    rw,noatime,nodiratime,noauto_da_alloc,barrier=1                                      wait
+ /dev/block/platform/msm_sdcc.1/by-name/userdata     /data            ext4    rw,nosuid,nodev,noatime,nodiratime,data=writeback,noauto_da_alloc,barrier=1          wait,check
+ /dev/block/platform/msm_sdcc.1/by-name/cache        /cache           ext4    rw,nosuid,nodev,noatime,nodiratime,data=writeback,noauto_da_alloc,barrier=1          wait,check
+ /dev/block/platform/msm_sdcc.1/by-name/modem        /firmware        ext4    ro,nosuid,nodev,noatime,nodiratime,barrier=1                                         wait,check
+-/dev/block/platform/msm_sdcc.1/by-name/persist      /persist         ext4    rw,nosuid,nodev,noatime,nodiratime,barrier=1                                         wait,check
++/dev/block/platform/msm_sdcc.1/by-name/persist      /extra_part1     ext4    rw,nosuid,nodev,noatime,nodiratime,barrier=1,                                        wait,check
+ /dev/block/platform/msm_sdcc.1/by-name/boot         /boot            emmc    defaults                                                                             defaults
+ /dev/block/platform/msm_sdcc.1/by-name/recovery     /recovery        emmc    defaults                                                                             defaults
+ /dev/block/platform/msm_sdcc.1/by-name/misc         /misc            emmc    defaults                                                                             defaults
