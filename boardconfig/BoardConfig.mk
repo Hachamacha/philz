@@ -10,7 +10,7 @@
 #                               you'll also have to copy modules to ramdisk and load them in init.rc or a loader script
 #                               you need either an exfat enabled prebuilt kernel or to compile exfat modules along kernel
 #                               you also need to patch minivold: https://github.com/PhilZ-cwm6/android_system_vold
-#   - KERNEL_NTFS_MODULE_NAME:  Same as above, but for ntfs.
+#   - KERNEL_NTFS_MODULE_NAME:  Same as above, but for ntfs. Currently, it is only limited write support. Better drop to fuse
 #   - BOARD_USE_MTK_LAYOUT :=   true
 #                               will enable backup/restore of boot, recovery and uboot partitions on MTK devices
 #   - BOARD_MTK_BOOT_LABEL :=   "/bootimg"
@@ -42,9 +42,9 @@
 #                               will force using ro.product.model as device id if available
 #                               you still need to enable a LOCAL_CFLAGS if defined
 #   - BOARD_HAS_SLOW_STORAGE := true
-#                               default setting will disable size progress info during backup/restore
-#   - BOARD_USE_FB2PNG := true
-#                               define this to true if your device supports screen capture using fb2png
+#                               when defined, size progress info during backup/restore will be disabled on default settings
+#   - BOARD_HAS_NO_FB2PNG := true
+#                               define this to disable fb2png support and spare some space (do not use screen capture)
 #   - BOARD_USE_NTFS_3G := false
 #                               will not include ntfs-3g binary to format and mount NTFS partitions.
 #                               devices using NTFS kernel modules will still be able to mount NTFS but not format to NTFS
@@ -92,7 +92,6 @@ else ifeq ($(TARGET_PRODUCT), cm_i9082)
     TARGET_COMMON_NAME := Galaxy i9082
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 480
     BOARD_HAS_LOW_RESOLUTION := true
@@ -135,7 +134,6 @@ else ifeq ($(TARGET_PRODUCT), cm_t769)
     TARGET_COMMON_NAME := SGH-T769
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 480
     BOARD_HAS_LOW_RESOLUTION := true
@@ -147,12 +145,10 @@ else ifeq ($(TARGET_PRODUCT), cm_i9100)
     TARGET_COMMON_NAME := i9100
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 480
     BOARD_HAS_LOW_RESOLUTION := true
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy S2 Epic 4G Touch - SPH-D710 (d710)
@@ -160,12 +156,10 @@ else ifeq ($(TARGET_PRODUCT), cm_d710)
     TARGET_COMMON_NAME := SPH-D710
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 480
     BOARD_HAS_LOW_RESOLUTION := true
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy S2 - i9100g
@@ -173,12 +167,10 @@ else ifeq ($(TARGET_PRODUCT), cm_i9100g)
     TARGET_COMMON_NAME := i9100G
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 480
     BOARD_HAS_LOW_RESOLUTION := true
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy Note - n7000
@@ -186,11 +178,9 @@ else ifeq ($(TARGET_PRODUCT), cm_n7000)
     TARGET_COMMON_NAME := n7000
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 800
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy S2 HD LTE (SGH-I757M) - celoxhd
@@ -201,7 +191,6 @@ else ifeq ($(TARGET_PRODUCT), cm_celoxhd)
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Samsung Exhilarate SGH-I577 (exhilarate)
@@ -209,12 +198,10 @@ else ifeq ($(TARGET_PRODUCT), cm_exhilarate)
     TARGET_COMMON_NAME := SGH-I577 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 480
     BOARD_HAS_LOW_RESOLUTION := true
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy Core Duos (i8262)
@@ -232,12 +219,10 @@ else ifeq ($(TARGET_PRODUCT), cm_skyrocket)
     TARGET_COMMON_NAME := Skyrocket i727
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 480
     BOARD_HAS_LOW_RESOLUTION := true
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy S3 International - i9300 - i9305
@@ -245,11 +230,9 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_i9300 cm_i9305),)
     TARGET_COMMON_NAME := Galaxy S3 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Samsung S3 Unified d2lte: d2att d2cri d2mtr d2spr d2tmo d2usc d2vzw
@@ -257,11 +240,9 @@ else ifeq ($(TARGET_PRODUCT), cm_d2lte)
     TARGET_COMMON_NAME := $(TARGET_PRODUCT)
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 # Galaxy S Relay 4G - SGH-T699 (apexqtmo) // Galaxy Express AT&T (expressatt)
@@ -270,12 +251,10 @@ else ifneq ($(filter $(TARGET_PRODUCT), cm_apexqtmo cm_expressatt),)
     TARGET_COMMON_NAME := $(TARGET_PRODUCT)
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 480
     BOARD_HAS_LOW_RESOLUTION := true
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy Note 2 - n7100
@@ -283,11 +262,9 @@ else ifeq ($(TARGET_PRODUCT), cm_n7100)
     TARGET_COMMON_NAME := Galaxy Note 2
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy Note 2 LTE - t0lte (n7105), t0lteatt (i317 / i317M canada bell), t0ltetmo (T889), l900 (sprint), i605 (verizon)
@@ -295,11 +272,9 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_t0lte cm_t0lteatt cm_t0ltetmo cm_l900 
     TARGET_COMMON_NAME := Note 2 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy Note 3 LTE - N9005 Unified (hlte): hltexx, hltespr, hltetmo, hltecan, hltevzw
@@ -307,7 +282,6 @@ else ifeq ($(TARGET_PRODUCT), cm_hlte)
     TARGET_COMMON_NAME := Note 3 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1920
     TARGET_SCREEN_WIDTH := 1080
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
@@ -318,14 +292,12 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_n5100 cm_n5110 cm_n5120),)
     TARGET_COMMON_NAME := Galaxy Note 8.0
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 1280
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
     # swap and flip are needed unless we fix things at kernel level
     #RECOVERY_TOUCHSCREEN_SWAP_XY := true
     #RECOVERY_TOUCHSCREEN_FLIP_Y := true
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy Note 10.1 GSM (n8000), Wifi (n8013), LTE (n8020)
@@ -333,11 +305,9 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_n8000 cm_n8013 cm_n8020),)
     TARGET_COMMON_NAME := Galaxy Note 10.1 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 1280
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy Note 10.1 2014 LTE (lt03ltexx)
@@ -345,7 +315,6 @@ else ifeq ($(TARGET_PRODUCT), cm_lt03ltexx)
     TARGET_COMMON_NAME := Note 10.1 2014 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
     BOARD_USE_B_SLOT_PROTOCOL := true
 
@@ -354,7 +323,6 @@ else ifeq ($(TARGET_PRODUCT), cm_i9500)
     TARGET_COMMON_NAME := i9500
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1920
     TARGET_SCREEN_WIDTH := 1080
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
@@ -365,9 +333,7 @@ else ifeq ($(TARGET_PRODUCT), cm_i9500)
 else ifeq ($(TARGET_PRODUCT), cm_jflte)
     TARGET_COMMON_NAME := i9505 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
-    #BOARD_HAS_SLOW_STORAGE := true
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1920
     TARGET_SCREEN_WIDTH := 1080
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
@@ -378,7 +344,6 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_serranoltexx cm_serrano3gxx cm_serrano
     TARGET_COMMON_NAME := Galaxy S4 Mini ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 960
     TARGET_SCREEN_WIDTH := 540
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
@@ -389,11 +354,9 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_p3100 cm_p3110),)
     TARGET_COMMON_NAME := Galaxy Tab 2 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 600
     TARGET_SCREEN_WIDTH := 1024
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     #RECOVERY_TOUCHSCREEN_SWAP_XY := true
     #RECOVERY_TOUCHSCREEN_FLIP_Y := true
     BOARD_USE_B_SLOT_PROTOCOL := true
@@ -403,11 +366,9 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_p5100 cm_p5110),)
     TARGET_COMMON_NAME := Galaxy Tab 2 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 1280
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Galaxy Premier I9260 - superior
@@ -415,7 +376,6 @@ else ifeq ($(TARGET_PRODUCT), cm_superior)
     TARGET_COMMON_NAME := Galaxy Premier I9260
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
@@ -426,7 +386,6 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_meliusltexx),)
     TARGET_COMMON_NAME := Galaxy Mega I9205
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
     BRIGHTNESS_SYS_FILE := "/sys/class/lcd/panel/panel/brightness"
@@ -437,7 +396,6 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_melius3gxx),)
     TARGET_COMMON_NAME := Galaxy Mega i9200
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 960
     TARGET_SCREEN_WIDTH := 540
     BRIGHTNESS_SYS_FILE := "/sys/class/lcd/panel/panel/brightness"
@@ -448,11 +406,9 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_lt02wifi),)
     TARGET_COMMON_NAME := Galaxy Tab 3 7.0 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 600
     TARGET_SCREEN_WIDTH := 1024
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
-    BOARD_USE_FB2PNG := true
     BOARD_USE_B_SLOT_PROTOCOL := true
 
 #Samsung Galaxy Tab 3 8.0: SM-T310 (lt01wifi), SM-T311 (lt013g), SM-T315 (lt01lte)
@@ -460,7 +416,6 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_lt01wifi cm_lt013g cm_lt01lte),)
     TARGET_COMMON_NAME := Galaxy Tab 3 8.0 ($(TARGET_PRODUCT))
     BOOTLOADER_CMD_ARG := "download"
     KERNEL_EXFAT_MODULE_NAME := "exfat"
-    KERNEL_NTFS_MODULE_NAME := "ntfs"
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 800
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
@@ -472,7 +427,6 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_maguro cm_toro cm_toroplus),)
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/s6e8aa0/brightness"
-    BOARD_USE_FB2PNG := true
 
 #Google Nexus S (Samsung) - crespo / crespo4g
 else ifneq ($(filter $(TARGET_PRODUCT),cm_crespo cm_crespo4g),)
@@ -481,7 +435,6 @@ else ifneq ($(filter $(TARGET_PRODUCT),cm_crespo cm_crespo4g),)
     TARGET_SCREEN_WIDTH := 480
     BOARD_HAS_LOW_RESOLUTION := true
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/s5p_bl/brightness"
-    BOARD_USE_FB2PNG := true
 
 #Google Nexus 4 (LGE) - mako
 else ifeq ($(TARGET_PRODUCT), cm_mako)
@@ -489,7 +442,6 @@ else ifeq ($(TARGET_PRODUCT), cm_mako)
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 768
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
-    BOARD_USE_FB2PNG := true
 
 #Google Nexus 5 (LGE) - hammerhead
 else ifeq ($(TARGET_PRODUCT), cm_hammerhead)
@@ -695,7 +647,7 @@ else ifeq ($(TARGET_PRODUCT), cm_xt907)
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/lcd-backlight/brightness"
 
 #Motorola Droid RAZR HD GSM (xt925) and US (xt926)
-else ifneq ($(filter $(TARGET_PRODUCT),cm_xt925 cm_xt926, cm_moto_msm8960),)
+else ifneq ($(filter $(TARGET_PRODUCT),cm_xt925 cm_xt926i cm_moto_msm8960),)
     TARGET_COMMON_NAME := Droid RAZR HD ($(TARGET_PRODUCT))
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720

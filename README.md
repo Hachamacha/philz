@@ -1,4 +1,6 @@
-philz
-=====
+__<center><big>PhilZ Touch Recovery 6 (ClockworkMod 6 based / Advanced Edition)</big></center>__
 
-Philz for my phone - xt926 (xt925) named cm_moto_msm8960 in cm11 world. 
+.
+
+__Home page__
+http://forum.xda-developers.com/showthread.php?t=2201860

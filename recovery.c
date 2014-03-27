@@ -187,9 +187,6 @@ get_args(int *argc, char ***argv) {
         get_bootloader_message(&boot);  // this may fail, leaving a zeroed structure
     }
 
-    // try to setup LOGE *mhs* for debug.
-    boot.command[0]=1;
-
     if (boot.command[0] != 0 && boot.command[0] != 255) {
         LOGI("Boot command: %.*s\n", sizeof(boot.command), boot.command);
     }

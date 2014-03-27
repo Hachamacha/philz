@@ -297,6 +297,42 @@ char* DirName(const char* path) {
     return (ret < 0) ? NULL : bname;
 }
 
+// thread safe dirname (free by caller)
+char* t_DirName(const char* path) {
+    int ret;
+    char* bname = (char *)malloc(PATH_MAX);
+    if (bname == NULL) {
+        LOGE("t_DirName: memory error\n");
+        return NULL;
+    }
+
+    ret = DirName_r(path, bname, PATH_MAX);
+    if (ret < 0) {
+        LOGE("t_DirName: error\n");
+        return NULL;
+    }
+    
+    return bname;
+}
+
+// thread safe basename (free by caller)
+char* t_BaseName(const char* path) {
+    int ret;
+    char* bname = (char *)malloc(PATH_MAX);
+    if (bname == NULL) {
+        LOGE("t_BaseName: memory error\n");
+        return NULL;
+    }
+
+    ret = BaseName_r(path, bname, PATH_MAX);
+    if (ret < 0) {
+        LOGE("t_BaseName: error\n");
+        return NULL;
+    }
+    
+    return bname;
+}
+
 // delete a file
 void delete_a_file(const char* filename) {
     ensure_path_mounted(filename);
@@ -357,7 +393,9 @@ int copy_a_file(const char* file_in, const char* file_out) {
     }
 
     // this will chmod folder to 775
-    ensure_directory(DirName(file_out));
+    char tmp[PATH_MAX];
+    sprintf(tmp, "%s", DirName(file_out));
+    ensure_directory(tmp);
     FILE *fp = fopen(file_in, "rb");
     if (fp == NULL) {
         LOGE("copy: source file not found (%s)\n", file_in);
@@ -371,11 +409,10 @@ int copy_a_file(const char* file_in, const char* file_out) {
     }
 
     // start copy
-    char buf[PATH_MAX];
     size_t size;
     // unsigned int size;
-    while ((size = fread(buf, 1, sizeof(buf), fp))) {
-        fwrite(buf, 1, size, fp_out);
+    while ((size = fread(tmp, 1, sizeof(tmp), fp))) {
+        fwrite(tmp, 1, size, fp_out);
     }
     fclose(fp);
     fclose(fp_out);
@@ -746,7 +783,9 @@ int verify_md5digest(const char* filepath, const char* md5file) {
             strcat(md5sum, hex);
         }
 
-        sprintf(md5file2, "%s", BaseName(filepath));
+        char* b = t_BaseName(filepath);
+        sprintf(md5file2, "%s", b);
+        free(b);
         strcat(md5sum, "  ");
         strcat(md5sum, md5file2);
         strcat(md5sum, "\n");
@@ -765,14 +804,10 @@ pthread_t tmd5_display;
 pthread_t tmd5_verify;
 static void *md5_display_thread(void *arg) {
     char filepath[PATH_MAX];
-
-    set_ensure_mount_always_true(1);
-
     sprintf(filepath, "%s", (char*)arg);
     if (computeMD5(filepath) == 0)
         write_md5digest(NULL);
 
-    set_ensure_mount_always_true(0);
     return NULL;
 }
 
@@ -780,48 +815,73 @@ static void *md5_verify_thread(void *arg) {
     int ret;
     char filepath[PATH_MAX];
 
-    set_ensure_mount_always_true(1);
-
     sprintf(filepath, "%s", (char*)arg);
     ret = verify_md5digest(filepath, NULL);
     if (ret < 0) {
+#ifdef PHILZ_TOUCH_RECOVERY
         ui_print_preset_colors(1, "red");
+#endif
         ui_print("MD5 check: error\n");
     } else if (ret == 0) {
+#ifdef PHILZ_TOUCH_RECOVERY
         ui_print_preset_colors(1, "green");
+#endif
         ui_print("MD5 check: success\n");
     }
 
-    set_ensure_mount_always_true(0);
     return NULL;
 }
 
 void start_md5_display_thread(char* filepath) {
+    // ensure_path_mounted() is not thread safe, we must disable it when starting a thread for md5 checks
+    // we ensure primary storage is also mounted as it is needed by confirm_install() function
+    ensure_path_mounted(get_primary_storage_path());
+    set_ensure_mount_always_true(1);
+
+#ifdef PHILZ_TOUCH_RECOVERY
     ui_print_preset_colors(1, NULL);
+#endif
     ui_print("Calculating md5sum...\n");
+
     pthread_create(&tmd5_display, NULL, &md5_display_thread, filepath);
 }
 
 void stop_md5_display_thread() {
     cancel_md5digest = 1;
+#ifdef PHILZ_TOUCH_RECOVERY
     ui_print_preset_colors(0, NULL);
+#endif
     if (pthread_kill(tmd5_display, 0) != ESRCH)
         ui_print("Cancelling md5sum...\n");
+
     pthread_join(tmd5_display, NULL);
+    set_ensure_mount_always_true(0);
 }
 
 void start_md5_verify_thread(char* filepath) {
+    // ensure_path_mounted() is not thread safe, we must disable it when starting a thread for md5 checks
+    // we ensure primary storage is also mounted as it is needed by confirm_install() function
+    ensure_path_mounted(get_primary_storage_path());
+    set_ensure_mount_always_true(1);
+
+#ifdef PHILZ_TOUCH_RECOVERY
     ui_print_preset_colors(1, NULL);
+#endif
     ui_print("Verifying md5sum...\n");
+
     pthread_create(&tmd5_verify, NULL, &md5_verify_thread, filepath);
 }
 
 void stop_md5_verify_thread() {
     cancel_md5digest = 1;
+#ifdef PHILZ_TOUCH_RECOVERY
     ui_print_preset_colors(0, NULL);
+#endif
     if (pthread_kill(tmd5_verify, 0) != ESRCH)
         ui_print("Cancelling md5 check...\n");
+
     pthread_join(tmd5_verify, NULL);
+    set_ensure_mount_always_true(0);
 }
 // ------- End md5sum display
 
@@ -870,8 +930,10 @@ int write_config_file(const char* config_file, const char* key, const char* valu
     }
 
     char config_file_tmp[PATH_MAX];
+    char tmp[PATH_MAX];
     sprintf(config_file_tmp, "%s.tmp", config_file);
-    ensure_directory(DirName(config_file_tmp));
+    sprintf(tmp, "%s", DirName(config_file_tmp));
+    ensure_directory(tmp);
     delete_a_file(config_file_tmp);
 
     FILE *f_tmp = fopen(config_file_tmp, "wb");
@@ -1748,7 +1810,8 @@ static void regenerate_md5_sum_menu() {
     if (file == NULL)
         goto out;
 
-    char *backup_source = DirName(file);
+    char backup_source[PATH_MAX];
+    sprintf(backup_source, "%s", DirName(file));
     sprintf(tmp, "Process %s", BaseName(backup_source));
     if (confirm_selection("Regenerate md5 sum ?", tmp)) {
         ui_print("Generating md5 sum...\n");
@@ -2063,7 +2126,6 @@ void set_custom_zip_path() {
     }
 
     char custom_path2[PATH_MAX];
-    char *up_folder;
     sprintf(custom_path2, "%s", custom_path);
     vold_mount_all();
     for (;;) {
@@ -2071,7 +2133,7 @@ void set_custom_zip_path() {
         if (chosen_item == GO_BACK || chosen_item == REFRESH)
             break;
         if (chosen_item == 0) {
-            up_folder = DirName(custom_path);
+            const char *up_folder = DirName(custom_path);
             if (strcmp(up_folder, "/") == 0 || strcmp(up_folder, ".") == 0)
                 sprintf(custom_path2, "/" );
             else
@@ -2192,7 +2254,6 @@ int show_custom_zip_menu() {
     }
 
     int chosen_item;
-    char *up_folder;
     char custom_path2[PATH_MAX];
     sprintf(custom_path2, "%s", custom_path);
     vold_mount_all();
@@ -2214,7 +2275,7 @@ int show_custom_zip_menu() {
         }
         if (chosen_item < numDirs+1 && chosen_item >= 0) {
             if (chosen_item == 0) {
-                up_folder = DirName(custom_path2);
+                const char *up_folder = DirName(custom_path2);
                 sprintf(custom_path2, "%s", up_folder);
                 if (strcmp(custom_path2, "/") != 0)
                     strcat(custom_path2, "/");
@@ -2468,7 +2529,8 @@ void show_twrp_restore_menu(const char* backup_volume) {
     }
 
     char confirm[PATH_MAX];
-    char *backup_source = DirName(file);
+    char backup_source[PATH_MAX];
+    sprintf(backup_source, "%s", DirName(file));
     ui_print("%s will be restored to selected partitions!\n", backup_source);
     sprintf(confirm, "Yes - Restore %s", BaseName(backup_source));
     if (confirm_selection("Restore from this backup ?", confirm))
@@ -2480,7 +2542,7 @@ void show_twrp_restore_menu(const char* backup_volume) {
 static void custom_restore_handler(const char* backup_volume, const char* backup_folder) {
     char backup_path[PATH_MAX];
     char tmp[PATH_MAX];
-    char *backup_source;
+    char backup_source[PATH_MAX];
     char* file = NULL;
     char* confirm_install = "Restore from this backup?";
     static const char* headers[] = {"Choose a backup to restore", NULL};
@@ -2505,7 +2567,7 @@ static void custom_restore_handler(const char* backup_volume, const char* backup
         }
 
         // restore efs raw image
-        backup_source = BaseName(file);
+        sprintf(backup_source, "%s", BaseName(file));
         ui_print("%s will be flashed to /efs!\n", backup_source);
         sprintf(tmp, "Yes - Restore %s", backup_source);
         if (confirm_selection(confirm_install, tmp))
@@ -2545,7 +2607,7 @@ static void custom_restore_handler(const char* backup_volume, const char* backup
         }
 
         // restore modem.bin raw image
-        backup_source = BaseName(file);
+        sprintf(backup_source, "%s", BaseName(file));
         Volume *vol = volume_for_path("/modem");
         if (vol != NULL) {
             ui_print("%s will be flashed to /modem!\n", backup_source);
@@ -2563,7 +2625,7 @@ static void custom_restore_handler(const char* backup_volume, const char* backup
         }
 
         // restore radio.bin raw image
-        backup_source = BaseName(file);
+        sprintf(backup_source, "%s", BaseName(file));
         Volume *vol = volume_for_path("/radio");
         if (vol != NULL) {
             ui_print("%s will be flashed to /radio!\n", backup_source);
@@ -2581,7 +2643,7 @@ static void custom_restore_handler(const char* backup_volume, const char* backup
             return;
         }
 
-        backup_source = DirName(file);
+        sprintf(backup_source, "%s", DirName(file));
         ui_print("%s will be restored to selected partitions!\n", backup_source);
         sprintf(tmp, "Yes - Restore %s", BaseName(backup_source));
         if (confirm_selection(confirm_install, tmp)) {
@@ -2755,9 +2817,11 @@ void custom_restore_menu(const char* backup_volume) {
         else ui_format_gui_menu(item_data, "Restore data", "( )");
         list[LIST_ITEM_DATA] = item_data;
 
+        char dirtmp[PATH_MAX];
         set_android_secure_path(tmp);
+        sprintf(dirtmp, "%s", DirName(tmp));
         if (backup_data && android_secure_ext)
-            ui_format_gui_menu(item_andsec, "Restore and-sec", DirName(tmp));
+            ui_format_gui_menu(item_andsec, "Restore and-sec", dirtmp);
         else ui_format_gui_menu(item_andsec, "Restore and-sec", "( )");
         list[LIST_ITEM_ANDSEC] = item_andsec;
 
@@ -3015,9 +3079,11 @@ void custom_backup_menu(const char* backup_volume)
         else ui_format_gui_menu(item_data, "Backup data", "( )");
         list[LIST_ITEM_DATA] = item_data;
 
+        char dirtmp[PATH_MAX];
         set_android_secure_path(tmp);
+        sprintf(dirtmp, "%s", DirName(tmp));
         if (backup_data && android_secure_ext)
-            ui_format_gui_menu(item_andsec, "Backup and-sec", DirName(tmp));
+            ui_format_gui_menu(item_andsec, "Backup and-sec", dirtmp);
         else ui_format_gui_menu(item_andsec, "Backup and-sec", "( )");
         list[LIST_ITEM_ANDSEC] = item_andsec;
 
