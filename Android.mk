@@ -71,7 +71,11 @@ endif
 # This should be the same line as upstream to not break makerecoveries.sh
 RECOVERY_VERSION := $(RECOVERY_NAME) v6.0.4.7
 
+<<<<<<< HEAD
 PHILZ_BUILD := 6.23.9
+=======
+PHILZ_BUILD := 6.24.8
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 CWM_BASE_VERSION := $(shell echo $(RECOVERY_VERSION) | cut -d ' ' -f 3)
 LOCAL_CFLAGS += -DCWM_BASE_VERSION="$(CWM_BASE_VERSION)"
 

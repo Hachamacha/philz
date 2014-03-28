@@ -52,6 +52,10 @@ void delete_a_file(const char* filename);
 void ensure_directory(const char* dir); // in nandroid.c
 int is_path_ramdisk(const char* path);
 int copy_a_file(const char* file_in, const char* file_out);
+<<<<<<< HEAD
+=======
+int append_string_to_file(const char* filename, const char* string);
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 char* read_file_to_buffer(const char* filepath, unsigned long *len);
 char* BaseName(const char* path);
 char* DirName(const char* path);
@@ -63,8 +67,12 @@ void start_md5_verify_thread(char* filepath);
 void stop_md5_verify_thread();
 
 // md5sum calculate / display / write / check
+<<<<<<< HEAD
 int write_md5digest(const char* md5file);
 int write_md5digest(const char* md5file);
+=======
+int write_md5digest(const char* filepath, const char* md5file, int append);
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 int verify_md5digest(const char* filepath, const char* md5file);
 
 // custom zip path + free browse mode

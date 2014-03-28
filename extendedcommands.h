@@ -5,7 +5,11 @@ void
 show_choose_zip_menu();
 
 char**
+<<<<<<< HEAD
 gather_files(const char* directory, const char* fileExtensionOrDirectory, int* numFiles);
+=======
+gather_files(const char* basedir, const char* fileExtensionOrDirectory, int* numFiles);
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 
 char*
 choose_file_menu(const char* basedir, const char* fileExtensionOrDirectory, const char* headers[]);
@@ -13,7 +17,11 @@ choose_file_menu(const char* basedir, const char* fileExtensionOrDirectory, cons
 int
 get_filtered_menu_selection(const char** headers, char** items, int menu_only, int initial_selection, int items_count);
 
+<<<<<<< HEAD
 void
+=======
+int
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 write_string_to_file(const char* filename, const char* string);
 
 int

@@ -27,7 +27,12 @@ int nandroid_restore_partition_extended(const char* backup_path, const char* mou
 /**********************************/
 
 void finish_nandroid_job();
+<<<<<<< HEAD
 
+=======
+int gen_nandroid_md5sum(const char* backup_path);
+int verify_nandroid_md5sum(const char* backup_path);
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 int gen_twrp_md5sum(const char* backup_path);
 int check_twrp_md5sum(const char* backup_path);
 int twrp_backup(const char* backup_path);

@@ -84,17 +84,34 @@ int get_filtered_menu_selection(const char** headers, char** items, int menu_onl
     return ret;
 }
 
+<<<<<<< HEAD
 void write_string_to_file(const char* filename, const char* string) {
     ensure_path_mounted(filename);
     char tmp[PATH_MAX];
+=======
+int write_string_to_file(const char* filename, const char* string) {
+    char tmp[PATH_MAX];
+    int ret = -1;
+
+    ensure_path_mounted(filename);
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     sprintf(tmp, "mkdir -p $(dirname %s)", filename);
     __system(tmp);
     FILE *file = fopen(filename, "w");
     if (file != NULL) {
+<<<<<<< HEAD
         fprintf(file, "%s", string);
         fclose(file);
     } else
         LOGE("Cannot write to %s\n", filename);
+=======
+        ret = fprintf(file, "%s", string);
+        fclose(file);
+    } else
+        LOGE("Cannot write to %s\n", filename);
+
+    return ret;
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 }
 
 void write_recovery_version() {
@@ -307,7 +324,11 @@ void free_string_array(char** array) {
     free(array);
 }
 
+<<<<<<< HEAD
 char** gather_files(const char* directory, const char* fileExtensionOrDirectory, int* numFiles) {
+=======
+char** gather_files(const char* basedir, const char* fileExtensionOrDirectory, int* numFiles) {
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     char path[PATH_MAX] = "";
     DIR *dir;
     struct dirent *de;
@@ -316,7 +337,19 @@ char** gather_files(const char* directory, const char* fileExtensionOrDirectory,
     char** files = NULL;
     int pass;
     *numFiles = 0;
+<<<<<<< HEAD
     int dirLen = strlen(directory);
+=======
+    int dirLen = strlen(basedir);
+    char directory[PATH_MAX];
+
+    // Append a trailing slash if necessary
+    strcpy(directory, basedir);
+    if (directory[dirLen - 1] != '/') {
+        strcat(directory, "/");
+        ++dirLen;
+    }
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 
     dir = opendir(directory);
     if (dir == NULL) {
@@ -551,11 +584,18 @@ void show_nandroid_delete_menu(const char* volume_path) {
     }
 
     static const char* headers[] = { "Choose a backup to delete", NULL };
+<<<<<<< HEAD
     char tmp[PATH_MAX];
+=======
+    char path[PATH_MAX];
+    char tmp[PATH_MAX];
+    char* file;
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 
     if (twrp_backup_mode.value) {
         char device_id[PROPERTY_VALUE_MAX];
         get_device_id(device_id);
+<<<<<<< HEAD
         sprintf(tmp, "%s/%s/%s", volume_path, TWRP_BACKUP_PATH, device_id);
     } else {
         sprintf(tmp, "%s/%s", volume_path, CWM_BACKUP_PATH);    
@@ -563,6 +603,15 @@ void show_nandroid_delete_menu(const char* volume_path) {
 
     for(;;) {
         char* file = choose_file_menu(tmp, NULL, headers);
+=======
+        sprintf(path, "%s/%s/%s", volume_path, TWRP_BACKUP_PATH, device_id);
+    } else {
+        sprintf(path, "%s/%s", volume_path, CWM_BACKUP_PATH);    
+    }
+
+    for(;;) {
+        file = choose_file_menu(path, NULL, headers);
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
         if (file == NULL)
             return;
 

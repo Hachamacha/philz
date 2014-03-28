@@ -664,6 +664,7 @@ int nandroid_backup(const char* backup_path) {
             return ret;
     }
 
+<<<<<<< HEAD
     if (enable_md5sum.value) {
         ui_print("Generating md5 sum...\n");
         sprintf(tmp, "nandroid-md5.sh %s", backup_path);
@@ -672,6 +673,10 @@ int nandroid_backup(const char* backup_path) {
             return ret;
         }
     }
+=======
+    if (enable_md5sum.value && 0 != (ret = gen_nandroid_md5sum(backup_path)))
+        return ret;
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 
     sprintf(tmp, "cp /tmp/recovery.log %s/recovery.log", backup_path);
     __system(tmp);
@@ -1116,11 +1121,16 @@ int nandroid_restore(const char* backup_path, int restore_boot, int restore_syst
         return print_and_error("Can't mount backup path\n");
 
     char tmp[PATH_MAX];
+<<<<<<< HEAD
     if (enable_md5sum.value) {
         ui_print("Checking MD5 sums...\n");
         sprintf(tmp, "cd %s && md5sum -c nandroid.md5", backup_path);
         if (0 != __system(tmp))
             return print_and_error("MD5 mismatch!\n");
+=======
+    if (enable_md5sum.value && verify_nandroid_md5sum(backup_path) != 0) {
+        return print_and_error("MD5 verification failed!\n");
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     }
 
     int ret;

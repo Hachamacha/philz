@@ -2,8 +2,13 @@
 # Device Specific Config                   #
 # These can go under device BoardConfig.mk #
 # By PhilZ for PhilZ Touch recovery        #
+<<<<<<< HEAD
 ############################################0
 # add msm8960 changes for now in the xt926/5 section but in the future , unify here.
+=======
+############################################
+#
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 # Info on some tags
 #   - KERNEL_EXFAT_MODULE_NAME: This will force minivold to use much faster kernel modules instead of slow fuse
 #                               it will only work if you have modified vold sources (contact me for info)
@@ -647,7 +652,11 @@ else ifeq ($(TARGET_PRODUCT), cm_xt907)
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/lcd-backlight/brightness"
 
 #Motorola Droid RAZR HD GSM (xt925) and US (xt926)
+<<<<<<< HEAD
 else ifneq ($(filter $(TARGET_PRODUCT),cm_xt925 cm_xt926i cm_moto_msm8960),)
+=======
+else ifneq ($(filter $(TARGET_PRODUCT),cm_xt925 cm_xt926),)
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     TARGET_COMMON_NAME := Droid RAZR HD ($(TARGET_PRODUCT))
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
@@ -728,6 +737,17 @@ else ifeq ($(TARGET_PRODUCT), cm_mint)
     TARGET_SCREEN_WIDTH := 720
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight_1/brightness"
 
+<<<<<<< HEAD
+=======
+#Sony Xperia ZL (odin)
+else ifeq ($(TARGET_PRODUCT), cm_odin)
+    TARGET_COMMON_NAME := Xperia ZL
+    KERNEL_EXFAT_MODULE_NAME := "texfat"
+    TARGET_SCREEN_HEIGHT := 1920
+    TARGET_SCREEN_WIDTH := 1080
+    BRIGHTNESS_SYS_FILE := "/sys/class/leds/lm3533-lcd-bl-1/brightness"
+
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 #ZTE Warp Sequent - N861 (warp2)
 else ifeq ($(TARGET_PRODUCT), cm_warp2)
     TARGET_COMMON_NAME := ZTE Warp Sequent - N861

@@ -108,6 +108,7 @@ handle_firmware_update(char* type, char* filename, ZipArchive* zip) {
 static const char *LAST_INSTALL_FILE = "/cache/recovery/last_install";
 static const char *DEV_PROP_PATH = "/dev/__properties__";
 static const char *DEV_PROP_BACKUP_PATH = "/dev/__properties_backup__";
+<<<<<<< HEAD
 static bool legacy_props_initd = false;
 
 static int set_legacy_props() {
@@ -126,6 +127,31 @@ static int set_legacy_props() {
     }
 
     legacy_props_initd = true;
+=======
+static bool legacy_props_env_initd = false;
+static bool legacy_props_path_modified = false;
+
+static int set_legacy_props() {
+    if (!legacy_props_env_initd) {
+        if (legacy_properties_init() != 0)
+            return -1;
+
+        char tmp[32];
+        int propfd, propsz;
+        legacy_get_property_workspace(&propfd, &propsz);
+        sprintf(tmp, "%d,%d", dup(propfd), propsz);
+        setenv("ANDROID_PROPERTY_WORKSPACE", tmp, 1);
+        legacy_props_env_initd = true;
+    }
+
+    if (rename(DEV_PROP_PATH, DEV_PROP_BACKUP_PATH) != 0) {
+        LOGE("Could not rename properties path: %s\n", DEV_PROP_PATH);
+        return -1;
+    } else {
+        legacy_props_path_modified = true;
+    }
+
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     return 0;
 }
 
@@ -133,9 +159,16 @@ static int unset_legacy_props() {
     if (rename(DEV_PROP_BACKUP_PATH, DEV_PROP_PATH) != 0) {
         LOGE("Could not rename properties path: %s\n", DEV_PROP_BACKUP_PATH);
         return -1;
+<<<<<<< HEAD
     }
 
     legacy_props_initd = false;
+=======
+    } else {
+        legacy_props_path_modified = false;
+    }
+
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     return 0;
 }
 
@@ -339,7 +372,11 @@ try_update_binary(const char *path, ZipArchive *zip) {
     waitpid(pid, &status, 0);
 
     /* Unset legacy properties */
+<<<<<<< HEAD
     if (legacy_props_initd) {
+=======
+    if (legacy_props_path_modified) {
+>>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
         if (unset_legacy_props() != 0) {
             LOGE("Legacy property environment did not disable successfully. Legacy properties may still be in use.\n");
         } else {
