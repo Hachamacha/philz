@@ -2,3 +2,4 @@
 ./device/motorola/moto_msm8960/device_moto_msm8960.mk
 ./device/motorola/moto_msm8960/rootdir/etc/fstab.qcom
 ./device/motorola/qcom-common/sepolicy/file_contexts
+./bootable/recovery/extendedcommands.c

@@ -1,0 +1,36 @@
+--- bootable/recovery/extendedcommands.c.orig	2014-03-29 08:14:51.670308803 -0700
++++ bootable/recovery/extendedcommands.c	2014-03-29 15:06:44.179986630 -0700
+@@ -311,6 +311,23 @@
+     free(array);
+ }
+ 
++// case-independent string compare routine dec. 
++int strcmpi(const char *, const char *);
++
++// case insensitive C-string compare  
++ int strcmpi(const char *s1, const char *s2) {
++     char *s1_p = (char *)s1, *s2_p = (char *)s2;
++     while ((tolower((int)(*s1_p)) == tolower((int)(*s2_p))) && (*s1_p != '\0')) {
++         ++s1_p; ++s2_p;
++     }
++     if (*s1_p == '\0') {
++         return 0;
++     } else {
++         int c1 = tolower((int)*s1_p), c2 = tolower((int)*s2_p);
++         return (c1 < c2) ? -1 : +1;
++     }
++ }
++
+ char** gather_files(const char* basedir, const char* fileExtensionOrDirectory, int* numFiles) {
+     char path[PATH_MAX] = "";
+     DIR *dir;
+@@ -413,7 +430,8 @@
+             int curMax = -1;
+             int j;
+             for (j = 0; j < total - i; j++) {
+-                if (curMax == -1 || strcmp(files[curMax], files[j]) < 0)
++		// try using strcmpi (above near line 328) to get rid of case-dependence. 
++                if (curMax == -1 || strcmpi(files[curMax], files[j]) < 0)
+                     curMax = j;
+             }
+             char* temp = files[curMax];
