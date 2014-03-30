@@ -2,13 +2,8 @@
 # Device Specific Config                   #
 # These can go under device BoardConfig.mk #
 # By PhilZ for PhilZ Touch recovery        #
-<<<<<<< HEAD
-############################################0
-# add msm8960 changes for now in the xt926/5 section but in the future , unify here.
-=======
 ############################################
 #
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 # Info on some tags
 #   - KERNEL_EXFAT_MODULE_NAME: This will force minivold to use much faster kernel modules instead of slow fuse
 #                               it will only work if you have modified vold sources (contact me for info)
@@ -85,6 +80,26 @@ else ifeq ($(TARGET_PRODUCT), cm_i9103)
 #Galaxy Exhibit Variants (codinalte)
 else ifeq ($(TARGET_PRODUCT), cm_codinalte)
     TARGET_COMMON_NAME := SGH-T599X (codinalte)
+    BOOTLOADER_CMD_ARG := "download"
+    TARGET_SCREEN_HEIGHT := 800
+    TARGET_SCREEN_WIDTH := 480
+    BOARD_HAS_LOW_RESOLUTION := true
+    BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
+    BOARD_USE_B_SLOT_PROTOCOL := true
+
+#Galaxy X Cover 2 - skomer
+else ifeq ($(TARGET_PRODUCT), cm_skomer)
+    TARGET_COMMON_NAME := GT-S7710
+    BOOTLOADER_CMD_ARG := "download"
+    TARGET_SCREEN_HEIGHT := 800
+    TARGET_SCREEN_WIDTH := 480
+    BOARD_HAS_LOW_RESOLUTION := true
+    BRIGHTNESS_SYS_FILE := "/sys/class/backlight/panel/brightness"
+    BOARD_USE_B_SLOT_PROTOCOL := true
+
+#Galaxy S3 Mini - golden
+else ifeq ($(TARGET_PRODUCT), cm_golden)
+    TARGET_COMMON_NAME := GT-I8190
     BOOTLOADER_CMD_ARG := "download"
     TARGET_SCREEN_HEIGHT := 800
     TARGET_SCREEN_WIDTH := 480
@@ -652,11 +667,7 @@ else ifeq ($(TARGET_PRODUCT), cm_xt907)
     BRIGHTNESS_SYS_FILE := "/sys/class/backlight/lcd-backlight/brightness"
 
 #Motorola Droid RAZR HD GSM (xt925) and US (xt926)
-<<<<<<< HEAD
-else ifneq ($(filter $(TARGET_PRODUCT),cm_xt925 cm_xt926i cm_moto_msm8960),)
-=======
-else ifneq ($(filter $(TARGET_PRODUCT),cm_xt925 cm_xt926),)
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
+else ifneq ($(filter $(TARGET_PRODUCT),cm_xt925 cm_xt926 cm_moto_msm8960),)
     TARGET_COMMON_NAME := Droid RAZR HD ($(TARGET_PRODUCT))
     TARGET_SCREEN_HEIGHT := 1280
     TARGET_SCREEN_WIDTH := 720
@@ -721,6 +732,14 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
     TARGET_SCREEN_WIDTH := 1080
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/wled:backlight/brightness"
 
+#Sony Xperia S (nozomi)
+else ifeq ($(TARGET_PRODUCT), cm_nozomi)
+    TARGET_COMMON_NAME := Xperia S
+    #KERNEL_EXFAT_MODULE_NAME := "texfat"
+    TARGET_SCREEN_HEIGHT := 1280
+    TARGET_SCREEN_WIDTH := 720
+    BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight/brightness"
+
 #Sony Xperia SP (huashan)
 else ifeq ($(TARGET_PRODUCT), cm_huashan)
     TARGET_COMMON_NAME := Xperia SP
@@ -737,8 +756,6 @@ else ifeq ($(TARGET_PRODUCT), cm_mint)
     TARGET_SCREEN_WIDTH := 720
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lcd-backlight_1/brightness"
 
-<<<<<<< HEAD
-=======
 #Sony Xperia ZL (odin)
 else ifeq ($(TARGET_PRODUCT), cm_odin)
     TARGET_COMMON_NAME := Xperia ZL
@@ -747,7 +764,30 @@ else ifeq ($(TARGET_PRODUCT), cm_odin)
     TARGET_SCREEN_WIDTH := 1080
     BRIGHTNESS_SYS_FILE := "/sys/class/leds/lm3533-lcd-bl-1/brightness"
 
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
+#Sony Xperia ZR (dogo)
+else ifeq ($(TARGET_PRODUCT), cm_dogo)
+    TARGET_COMMON_NAME := Xperia ZR
+    #KERNEL_EXFAT_MODULE_NAME := "texfat"
+    TARGET_SCREEN_HEIGHT := 1280
+    TARGET_SCREEN_WIDTH := 720
+    BRIGHTNESS_SYS_FILE := "/sys/class/leds/lm3533-lcd-bl/brightness"
+
+#Sony Xperia Tablet Z (pollux)
+else ifeq ($(TARGET_PRODUCT), cm_pollux)
+    TARGET_COMMON_NAME := Xperia Tablet Z
+    #KERNEL_EXFAT_MODULE_NAME := "texfat"
+    TARGET_SCREEN_HEIGHT := 1200
+    TARGET_SCREEN_WIDTH := 1920
+    BRIGHTNESS_SYS_FILE := "/sys/devices/i2c-0/0-002c/backlight/lcd-backlight/brightness"
+
+#Sony Xperia Z1 Compact (amami)
+else ifeq ($(TARGET_PRODUCT), cm_amami)
+    TARGET_COMMON_NAME := Xperia Z1 Compact
+    #KERNEL_EXFAT_MODULE_NAME := "texfat"
+    TARGET_SCREEN_HEIGHT := 1280
+    TARGET_SCREEN_WIDTH := 720
+    BRIGHTNESS_SYS_FILE := "/sys/class/leds/wled:backlight/brightness"
+
 #ZTE Warp Sequent - N861 (warp2)
 else ifeq ($(TARGET_PRODUCT), cm_warp2)
     TARGET_COMMON_NAME := ZTE Warp Sequent - N861

@@ -333,6 +333,19 @@ char* t_BaseName(const char* path) {
     return bname;
 }
 
+// case insensitive C-string compare (adapted from titanic-fanatic)
+int strcmpi(const char *str1, const char *str2) {
+    int i = 0;
+    int ret = 0;
+
+    while (ret == 0 && str1[i] && str2[i]) {
+        ret = tolower(str1[i]) - tolower(str2[i]);
+        ++i;
+    }
+
+    return ret;
+}
+
 // delete a file
 void delete_a_file(const char* filename) {
     ensure_path_mounted(filename);
@@ -419,8 +432,6 @@ int copy_a_file(const char* file_in, const char* file_out) {
     return 0;
 }
 
-<<<<<<< HEAD
-=======
 // append a string to text file, create the directories and file if it doesn't exist
 int append_string_to_file(const char* filename, const char* string) {
     char tmp[PATH_MAX];
@@ -439,7 +450,6 @@ int append_string_to_file(const char* filename, const char* string) {
     return ret;
 }
 
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 // get file size (by Dees_Troy - TWRP)
 unsigned long Get_File_Size(const char* Path) {
     struct stat st;
@@ -552,12 +562,7 @@ int Find_Partition_Size(const char* Path) {
 */
     fp = fopen("/proc/dumchar_info", "rt");
     if (fp != NULL) {
-<<<<<<< HEAD
-        while (fgets(line, sizeof(line), fp) != NULL)
-        {
-=======
         while (fgets(line, sizeof(line), fp) != NULL) {
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
             char label[32], device[32];
             unsigned long size = 0;
 
@@ -601,12 +606,7 @@ int Find_Partition_Size(const char* Path) {
     if (fp != NULL) {
         // try to read blk_device link target for devices not using /dev/block/xxx in recovery.fstab
         char* mmcblk_from_link = readlink_device_blk(Path);
-<<<<<<< HEAD
-        while (fgets(line, sizeof(line), fp) != NULL)
-        {
-=======
         while (fgets(line, sizeof(line), fp) != NULL) {
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
             unsigned long major, minor, blocks;
             char device[512];
 
@@ -621,19 +621,10 @@ int Find_Partition_Size(const char* Path) {
                 Total_Size = blocks * 1024ULL;
                 //LOGI("%s(%s)=%llu\n", Path, volume->blk_device, Total_Size); // debug
                 ret = 0;
-<<<<<<< HEAD
-            }
-            else if (volume->blk_device2 != NULL && strcmp(tmpdevice, volume->blk_device2) == 0) {
-                Total_Size = blocks * 1024ULL;
-                ret = 0;
-            }
-            else if (mmcblk_from_link != NULL && strcmp(tmpdevice, mmcblk_from_link) == 0) {
-=======
             } else if (volume->blk_device2 != NULL && strcmp(tmpdevice, volume->blk_device2) == 0) {
                 Total_Size = blocks * 1024ULL;
                 ret = 0;
             } else if (mmcblk_from_link != NULL && strcmp(tmpdevice, mmcblk_from_link) == 0) {
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
                 // get size from blk_device symlink to /dev/block/xxx
                 free(mmcblk_from_link);
                 Total_Size = blocks * 1024ULL;
@@ -729,17 +720,6 @@ char* read_file_to_buffer(const char* filepath, unsigned long *len) {
 /*    bigbiff/Dees_Troy TeamWin   */
 /**********************************/
 static int cancel_md5digest = 0;
-<<<<<<< HEAD
-unsigned char md5sum_array[MD5LENGTH];
-
-static int computeMD5(const char* filepath) {
-    struct MD5Context md5c;
-    unsigned char buf[1024];
-    unsigned long size_total;
-    unsigned long size_progress;
-    unsigned len;
-    FILE *file;
-=======
 static int computeMD5(const char* filepath, char *md5sum) {
     struct MD5Context md5c;
     unsigned char md5sum_array[MD5LENGTH];
@@ -749,18 +729,13 @@ static int computeMD5(const char* filepath, char *md5sum) {
     unsigned long size_progress;
     unsigned len;
     int i;
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 
     if (!file_found(filepath)) {
         LOGE("computeMD5: '%s' not found\n", filepath);
         return -1;
     }
 
-<<<<<<< HEAD
-    file = fopen(filepath, "rb");
-=======
     FILE *file = fopen(filepath, "rb");
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     if (file == NULL) {
         LOGE("computeMD5: can't open %s\n", filepath);
         return -1;
@@ -768,11 +743,6 @@ static int computeMD5(const char* filepath, char *md5sum) {
 
     size_total = Get_File_Size(filepath);
     size_progress = 0;
-<<<<<<< HEAD
-    ui_reset_progress();
-    ui_show_progress(1, 0);
-=======
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     is_time_interval_passed(0);
     cancel_md5digest = 0;
     MD5Init(&md5c);
@@ -783,30 +753,6 @@ static int computeMD5(const char* filepath, char *md5sum) {
             ui_set_progress((float)size_progress / (float)size_total);
     }
 
-<<<<<<< HEAD
-    ui_reset_progress();
-    fclose(file);
-    if (!cancel_md5digest)
-        MD5Final(md5sum_array ,&md5c);
-    return cancel_md5digest;
-}
-
-int write_md5digest(const char* md5file) {
-    int i;
-    char hex[3];
-    char md5sum[PATH_MAX] = "";
-
-    for (i = 0; i < 16; ++i) {
-        snprintf(hex, 3 ,"%02x", md5sum_array[i]);
-        strcat(md5sum, hex);
-    }
-
-    if (md5file == NULL)
-        ui_print("%s\n", md5sum);
-    else
-        write_string_to_file(md5file, md5sum);
-    return 0;
-=======
     if (!cancel_md5digest) {
         MD5Final(md5sum_array ,&md5c);
         strcpy(md5sum, "");
@@ -843,7 +789,6 @@ int write_md5digest(const char* filepath, const char* md5file, int append) {
     }
 
     return ret;
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 }
 
 int verify_md5digest(const char* filepath, const char* md5file) {
@@ -861,34 +806,13 @@ int verify_md5digest(const char* filepath, const char* md5file) {
         sprintf(md5file2, "%s.md5", filepath);
     }
 
-<<<<<<< HEAD
-    // read md5 sum from md5file
-=======
     // read md5 sum from md5file2
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     unsigned long len = 0;
     char* md5read = read_file_to_buffer(md5file2, &len);
     if (md5read == NULL)
         return ret;
     md5read[len] = '\0';
 
-<<<<<<< HEAD
-    int i;
-    char hex[3];
-    char md5sum[PATH_MAX] = "";
-    if (0 == (ret = computeMD5(filepath))) {
-        for (i = 0; i < 16; ++i) {
-            snprintf(hex, 3 ,"%02x", md5sum_array[i]);
-            strcat(md5sum, hex);
-        }
-
-        char* b = t_BaseName(filepath);
-        sprintf(md5file2, "%s", b);
-        free(b);
-        strcat(md5sum, "  ");
-        strcat(md5sum, md5file2);
-        strcat(md5sum, "\n");
-=======
     char md5sum[PATH_MAX];
     if (0 == (ret = computeMD5(filepath, md5sum))) {
         char* b = t_BaseName(filepath);
@@ -896,7 +820,6 @@ int verify_md5digest(const char* filepath, const char* md5file) {
         strcat(md5sum, b);
         strcat(md5sum, "\n");
         free(b);
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
         if (strcmp(md5read, md5sum) != 0) {
             LOGE("MD5 calc: %s\n", md5sum);
             LOGE("Expected: %s\n", md5read);
@@ -912,18 +835,11 @@ pthread_t tmd5_display;
 pthread_t tmd5_verify;
 static void *md5_display_thread(void *arg) {
     char filepath[PATH_MAX];
-<<<<<<< HEAD
-    sprintf(filepath, "%s", (char*)arg);
-    if (computeMD5(filepath) == 0)
-        write_md5digest(NULL);
-
-=======
     ui_reset_progress();
     ui_show_progress(1, 0);
     sprintf(filepath, "%s", (char*)arg);
     write_md5digest(filepath, NULL, 0);
     ui_reset_progress();
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     return NULL;
 }
 
@@ -932,15 +848,11 @@ static void *md5_verify_thread(void *arg) {
     char filepath[PATH_MAX];
 
     sprintf(filepath, "%s", (char*)arg);
-<<<<<<< HEAD
-    ret = verify_md5digest(filepath, NULL);
-=======
     ui_reset_progress();
     ui_show_progress(1, 0);
     ret = verify_md5digest(filepath, NULL);
     ui_reset_progress();
 
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     if (ret < 0) {
 #ifdef PHILZ_TOUCH_RECOVERY
         ui_print_preset_colors(1, "red");
@@ -1926,11 +1838,7 @@ static void regenerate_md5_sum_menu() {
         goto out;
 
     // select backup set and regenerate md5 sum
-<<<<<<< HEAD
-    sprintf(tmp, "%s/clockworkmod/backup/", list[chosen_item] + strlen(list_prefix));
-=======
     sprintf(tmp, "%s/%s/", list[chosen_item] + strlen(list_prefix), CWM_BACKUP_PATH);
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     if (ensure_path_mounted(tmp) != 0)
         goto out;
 
@@ -1942,17 +1850,8 @@ static void regenerate_md5_sum_menu() {
     sprintf(backup_source, "%s", DirName(file));
     sprintf(tmp, "Process %s", BaseName(backup_source));
     if (confirm_selection("Regenerate md5 sum ?", tmp)) {
-<<<<<<< HEAD
-        ui_print("Generating md5 sum...\n");
-        // to do (optional): remove recovery.log from md5 sum, but no real need to extra code for this!
-        sprintf(tmp, "rm -f '%s/nandroid.md5'; nandroid-md5.sh %s", backup_source, backup_source);
-        if (0 != __system(tmp))
-            ui_print("Error while generating md5 sum!\n");
-        else ui_print("Done generating md5 sum.\n");
-=======
         if (0 == gen_nandroid_md5sum(backup_source))
             ui_print("Done generating md5 sum.\n");
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     }
 
     free(file);
@@ -3380,19 +3279,6 @@ void custom_backup_menu(const char* backup_volume)
 /*         (dees_troy at yahoo)          */
 /*****************************************/
 int check_twrp_md5sum(const char* backup_path) {
-<<<<<<< HEAD
-    char tmp[PATH_MAX];
-    int numFiles = 0;
-    ensure_path_mounted(backup_path);
-    strcpy(tmp, backup_path);
-    if (strcmp(tmp + strlen(tmp) - 1, "/") != 0)
-        strcat(tmp, "/");
-
-    ui_print("\n>> Checking MD5 sums...\n");
-    char** files = gather_files(tmp, ".md5", &numFiles);
-    if (numFiles == 0) {
-        ui_print("No md5 checksum files found in %s\n", tmp);
-=======
     char md5file[PATH_MAX];
     char** files;
     int numFiles = 0;
@@ -3402,18 +3288,11 @@ int check_twrp_md5sum(const char* backup_path) {
     files = gather_files(backup_path, "", &numFiles);
     if (numFiles == 0) {
         LOGE("No files found in %s\n", backup_path);
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
         free_string_array(files);
         return -1;
     }
 
     int i = 0;
-<<<<<<< HEAD
-    for(i=0; i < numFiles; i++) {
-        sprintf(tmp, "cd '%s' && md5sum -c '%s'", backup_path, BaseName(files[i]));
-        if (0 != __system(tmp)) {
-            ui_print("md5sum error in %s!\n", BaseName(files[i]));
-=======
     ui_reset_progress();
     ui_show_progress(1, 0);
     for(i = 0; i < numFiles; i++) {
@@ -3427,55 +3306,33 @@ int check_twrp_md5sum(const char* backup_path) {
         if (verify_md5digest(files[i], md5file) != 0) {
             LOGE("md5sum error!\n");
             ui_reset_progress();
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
             free_string_array(files);
             return -1;
         }
     }
 
     ui_print("MD5 sum ok.\n");
-<<<<<<< HEAD
-=======
     ui_reset_progress();
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     free_string_array(files);
     return 0;
 }
 
 int gen_twrp_md5sum(const char* backup_path) {
-<<<<<<< HEAD
-    char tmp[PATH_MAX];
-=======
     char md5file[PATH_MAX];
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     int numFiles = 0;
 
     ui_print("\n>> Generating md5 sum...\n");
     ensure_path_mounted(backup_path);
-<<<<<<< HEAD
-    sprintf(tmp, "%s/", backup_path);
-    // this will exclude subfolders!
-    char** files = gather_files(tmp, "", &numFiles);
-    if (numFiles == 0) {
-        ui_print("No files found in backup path %s\n", tmp);
-=======
 
     // this will exclude subfolders!
     char** files = gather_files(backup_path, "", &numFiles);
     if (numFiles == 0) {
         LOGE("No files found in backup path %s\n", backup_path);
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
         free_string_array(files);
         return -1;
     }
 
     int i = 0;
-<<<<<<< HEAD
-    for(i=0; i < numFiles; i++) {
-        sprintf(tmp, "cd '%s'; md5sum '%s' > '%s.md5'", backup_path, BaseName(files[i]), BaseName(files[i]));
-        if (0 != __system(tmp)) {
-            ui_print("Error while generating md5 sum for %s!\n", files[i]);
-=======
     ui_reset_progress();
     ui_show_progress(1, 0);
     for(i = 0; i < numFiles; i++) {
@@ -3484,17 +3341,13 @@ int gen_twrp_md5sum(const char* backup_path) {
         if (write_md5digest(files[i], md5file, 0) < 0) {
             LOGE("Error while generating md5sum!\n");
             ui_reset_progress();
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
             free_string_array(files);
             return -1;
         }
     }
 
     ui_print("MD5 sum created.\n");
-<<<<<<< HEAD
-=======
     ui_reset_progress();
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
     free_string_array(files);
     return 0;
 }
@@ -3525,10 +3378,6 @@ static void sanitize_device_id(char *device_id) {
 #define CPUINFO_HARDWARE_LEN    (strlen(CPUINFO_HARDWARE))
 
 void get_device_id(char *device_id) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
 #ifdef TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID
     // Now we'll use product_model_hardwareid as device id
     char model_id[PROPERTY_VALUE_MAX];
@@ -3572,12 +3421,7 @@ void get_device_id(char *device_id) {
 
     // Try the cmdline to see if the serial number was supplied
     fp = fopen("/proc/cmdline", "rt");
-<<<<<<< HEAD
-    if (fp != NULL)
-    {
-=======
     if (fp != NULL) {
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
         // First step, read the line. For cmdline, it's one long line
         LOGI("Checking cmdline for serialno...\n");
         fgets(line, sizeof(line), fp);
@@ -3589,17 +3433,9 @@ void get_device_id(char *device_id) {
             token[PROPERTY_VALUE_MAX] = 0;
 
         // Let's walk through the line, looking for the CMDLINE_SERIALNO token
-<<<<<<< HEAD
-        while (token)
-        {
-            // We don't need to verify the length of token, because if it's too short, it will mismatch CMDLINE_SERIALNO at the NULL
-            if (memcmp(token, CMDLINE_SERIALNO, CMDLINE_SERIALNO_LEN) == 0)
-            {
-=======
         while (token) {
             // We don't need to verify the length of token, because if it's too short, it will mismatch CMDLINE_SERIALNO at the NULL
             if (memcmp(token, CMDLINE_SERIALNO, CMDLINE_SERIALNO_LEN) == 0) {
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
                 // We found the serial number!
                 strcpy(device_id, token + CMDLINE_SERIALNO_LEN);
                 sanitize_device_id(device_id);
@@ -3612,20 +3448,6 @@ void get_device_id(char *device_id) {
 
     // Now we'll try cpuinfo for a serial number (we shouldn't reach here as it gives wired output)
     fp = fopen("/proc/cpuinfo", "rt");
-<<<<<<< HEAD
-    if (fp != NULL)
-    {
-        LOGI("Checking cpuinfo...\n");
-        while (fgets(line, sizeof(line), fp) != NULL) { // First step, read the line.
-            if (memcmp(line, CPUINFO_SERIALNO, CPUINFO_SERIALNO_LEN) == 0)  // check the beginning of the line for "Serial"
-            {
-                // We found the serial number!
-                token = line + CPUINFO_SERIALNO_LEN; // skip past "Serial"
-                while ((*token > 0 && *token <= 32 ) || *token == ':') token++; // skip over all spaces and the colon
-                if (*token != 0) {
-                    token[30] = 0;
-                    if (token[strlen(token)-1] == 10) { // checking for endline chars and dropping them from the end of the string if needed
-=======
     if (fp != NULL) {
         LOGI("Checking cpuinfo...\n");
         // First step, read the line.
@@ -3643,7 +3465,6 @@ void get_device_id(char *device_id) {
                     token[30] = 0;
                     if (token[strlen(token)-1] == 10) {
                         // checking for endline chars and dropping them from the end of the string if needed
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
                         char tmp[PROPERTY_VALUE_MAX];
                         memset(tmp, 0, sizeof(tmp));
                         strncpy(tmp, token, strlen(token) - 1);
@@ -3660,15 +3481,11 @@ void get_device_id(char *device_id) {
                 // We're also going to look for the hardware line in cpuinfo and save it for later in case we don't find the device ID
                 // We found the hardware ID
                 token = line + CPUINFO_HARDWARE_LEN; // skip past "Hardware"
-<<<<<<< HEAD
-                while ((*token > 0 && *token <= 32 ) || *token == ':')  token++; // skip over all spaces and the colon
-=======
                 while ((*token > 0 && *token <= 32 ) || *token == ':') {
                     // skip over all spaces and the colon
                     token++;
                 }
 
->>>>>>> 23a5a3e9cefda7859d475b1fbb897dea51a55ca8
                 if (*token != 0) {
                     token[30] = 0;
                     if (token[strlen(token)-1] == 10) { // checking for endline chars and dropping them from the end of the string if needed
